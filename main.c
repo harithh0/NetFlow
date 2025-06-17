@@ -131,11 +131,12 @@ int main(int argc, char *argv[])
 
     if (seconds_to_sleep == 1){
       time_interval = "s";
+      snprintf(final_time_interval, sizeof(final_time_interval), "%s", time_interval);
     } else {
       time_interval = argv[2];
+      snprintf(final_time_interval, sizeof(final_time_interval), "%s seconds", time_interval);
     }
 
-    snprintf(final_time_interval, sizeof(final_time_interval), "%s seconds", time_interval);
 
     printf("\r\033[KTotal ↑: %.2f %s/%s | Total ↓: %.2f %s/%s", final_tx, final_tx_metric, final_time_interval, final_rx, final_rx_metric, final_time_interval);
     fflush(stdout);
