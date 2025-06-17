@@ -18,4 +18,10 @@ gcc main.c -o netflow
 sudo cp _netflow /usr/share/zsh/vendor-completions/`
 ``````
 
+### Notes
+
+- Works on Linux only.
+- Uses /sys/class/net/<interface>/statistics/ to read traffic data.
+- No external dependencies.
+
 
