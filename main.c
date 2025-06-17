@@ -50,6 +50,9 @@ int main(int argc, char *argv[])
   char rx_data[32]; 
   char rx_data_after[32]; 
   
+  char *time_interval;
+
+  char final_time_interval[128];
   while (1){
 
     ssize_t tx_len = pread(tx_f, tx_data, sizeof(tx_data) - 1, 0);
@@ -75,38 +78,64 @@ int main(int argc, char *argv[])
     rx_data_after[rx_len_after - 1] = '\0';
 
     float tx_results = atoi(tx_data_after) - tx_bytes_int;
-    int rx_results = atoi(rx_data_after) - rx_bytes_int;
+    float rx_results = atoi(rx_data_after) - rx_bytes_int;
   
-    int final_rx = tx_results;
-    char *final_rx_metric = "Bytes/s";
+    float final_rx = tx_results;
+    char *final_rx_metric = "Bytes";
 
     float final_tx = tx_results;
-    char *final_tx_metric = "Bytes/s";
-
+    char *final_tx_metric = "Bytes";
     if (tx_results > 1000){
       // use kb 
       float tx_kbs = tx_results / 1024;
       if (tx_kbs > 1000){
         // if kb > 1000, use mb ...
         float tx_mb = tx_kbs / 1024;
-        final_tx = tx_mb; 
-        final_tx_metric = "Mb/s";
+        if (tx_mb > 1000){
+          float tx_gb = tx_mb / 1024;
+          final_tx = tx_gb; 
+          final_tx_metric = "Gb";
+        } else {
+          final_tx = tx_mb; 
+          final_tx_metric = "Mb";
+        }
       } else {
         final_tx = tx_kbs; 
-        final_tx_metric = "Kb/s";
+        final_tx_metric = "Kb";
       }
       
     }
 
     if (rx_results > 1000){
       // use kb 
-      int rx_kbs = rx_results / 1024;
-      final_rx = rx_kbs; 
-      final_rx_metric = "Kb/s";
+      float rx_kbs = rx_results / 1024;
+      if (rx_kbs > 1000){
+        float rx_mb = rx_kbs / 1024;
+        if (rx_mb > 1000){
+          float rx_gb = rx_mb / 1024;
+          final_rx = rx_gb;
+          final_rx_metric = "Gb";
+        } else {
+          final_rx = rx_mb;
+          final_rx_metric = "Mb";
+        }
+      } else {
+        final_rx = rx_kbs; 
+        final_rx_metric = "Kb";
+      }
+
       
       // if kb > 1000, use mb ...
     }
-    printf("\r\033[KTotal ↑: %.2f %s | Total ↓: %d %s", final_tx, final_tx_metric, final_rx, final_rx_metric);
+
+    if (seconds_to_sleep == 1){
+      time_interval = "s";
+    } else {
+      time_interval = argv[2];
+    }
+
+    snprintf(final_time_interval, sizeof(final_time_interval), "%s seconds", time_interval);
+    printf("\r\033[KTotal ↑: %.2f %s/%s | Total ↓: %.2f %s/%s", final_tx, final_tx_metric, final_time_interval, final_rx, final_rx_metric, final_time_interval);
     fflush(stdout);
   }
 
