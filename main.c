@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include <unistd.h>
-#include <unistd.h>
-#include <fcntl.h>
+
+
+// for open() file (low-level POSIX call)
+#include <unistd.h> 
+#include <fcntl.h> 
 
 /*
   * Format: ./main -s <seconds> -i <interface>
@@ -68,15 +69,9 @@ int main(int argc, char *argv[])
     rx_data[rx_len - 1] = '\0';
 
     int tx_bytes_int = atoi(tx_data);
-    /* int tx_kbs = tx_bytes_int / 1024; */
-    /* int tx_mb = tx_kbs / 1024; */
     int rx_bytes_int = atoi(rx_data);
-    /* int rx_kbs = rx_bytes_int / 1024; */
-    /* int rx_mb = rx_kbs / 1024; */
 
 
-    /* printf("\rTotal ↑: %s | Total ↓: %s", tx_data, rx_data); */ // str
-    /* printf("\rTotal ↑: %d | Total ↓: %d", tx_kbs, rx_kbs); */
     sleep(seconds_to_sleep);
 
     ssize_t tx_len_after = pread(tx_f, tx_data_after, sizeof(tx_data_after) - 1, 0);
