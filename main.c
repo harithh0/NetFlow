@@ -13,13 +13,15 @@
 
 int main(int argc, char *argv[])
 {
-  /* if (argc < 4){ */
-  /*   printf("Error usage\n"); */
-  /*   return -1; */
-  /**/
-  /* } */
+  if (argc < 5){
+    printf("Correct usage:\n");
+    printf("./netflow -s <0-60 seconds> -i <interface>\n");
+    return -1;
+
+  }
 
   char *network_interface = argv[4];
+
   int seconds_to_sleep = atoi(argv[2]);
   char rx_path[128];
   char tx_path[128];
@@ -53,6 +55,11 @@ int main(int argc, char *argv[])
   char *time_interval;
 
   char final_time_interval[128];
+
+
+
+  printf("Interface: %s\n", network_interface);
+
   while (1){
 
     ssize_t tx_len = pread(tx_f, tx_data, sizeof(tx_data) - 1, 0);
@@ -125,7 +132,6 @@ int main(int argc, char *argv[])
       }
 
       
-      // if kb > 1000, use mb ...
     }
 
     if (seconds_to_sleep == 1){
@@ -135,6 +141,7 @@ int main(int argc, char *argv[])
     }
 
     snprintf(final_time_interval, sizeof(final_time_interval), "%s seconds", time_interval);
+
     printf("\r\033[KTotal ↑: %.2f %s/%s | Total ↓: %.2f %s/%s", final_tx, final_tx_metric, final_time_interval, final_rx, final_rx_metric, final_time_interval);
     fflush(stdout);
   }

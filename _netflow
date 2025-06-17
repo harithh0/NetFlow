@@ -1,0 +1,7 @@
+#compdef netflow
+
+_arguments \
+  '-s=[seconds]:seconds to sleep:' \
+  '-i=[interface]:network interface:( $(ls /sys/class/net) )' \
+  '*:filename:_files'
+
