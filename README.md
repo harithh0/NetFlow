@@ -15,7 +15,7 @@ gcc main.c -o netflow
 
 ``````bash
 
-sudo cp _netflow /usr/share/zsh/vendor-completions/`
+sudo cp _netflow /usr/share/zsh/vendor-completions/
 ``````
 
 ### Notes
